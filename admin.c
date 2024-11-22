@@ -92,7 +92,7 @@ struct Node *delete_user(int uid, struct Node *head)
     return head;
 }
 
-struct Node *search_user(int uid, struct Node *head)
+struct User search_user(int uid, struct Node *head)
 {
     head = file_to_linkedlist(head);
     struct Node *start = head;
@@ -100,11 +100,10 @@ struct Node *search_user(int uid, struct Node *head)
     {
         if (start->data.uid == uid)
         {
-            return start;
+            return start->data;
         }
         start = start->next;
     }
-    return NULL;
 }
 
 void view_user_data()
@@ -119,9 +118,86 @@ void view_user_data()
     fclose(ptr);
 }
 
+void view_ride(struct User *user)
+{
+    FILE *ptr = fopen("rides.txt", "r");
+    if (ptr == NULL)
+    {
+        printf("Error opening rides.txt\n");
+        return;
+    }
+
+    int found = 0;
+    char line[256];
+
+    while (fgets(line, sizeof(line), ptr) != NULL)
+    {
+        int ride_id, route_no, passenger_count, status;
+        int passengers[4];
+
+        sscanf(line, "Ride ID: %d, Route No: %d, Passenger Count: %d, Status: %d, Passengers: %d, %d, %d, %d", &ride_id, &route_no, &passenger_count, &status, &passengers[0], &passengers[1], &passengers[2], &passengers[3]);
+
+        if (user == NULL)
+        {
+            printf("Ride ID: %d, Route No: %d, Passenger Count: %d, Status: %d, Passengers: ", ride_id, route_no, passenger_count, status);
+            for (int i = 0; i < passenger_count && i < 4; i++)
+            {
+                printf("%d", passengers[i]);
+                if (i < passenger_count - 1)
+                {
+                    printf(", ");
+                }
+            }
+            printf("\n");
+            found = 1;
+        }
+        else
+        {
+            for (int i = 0; i < passenger_count && i < 4; i++)
+            {
+                if (passengers[i] == user->uid)
+                {
+                    printf("Ride ID: %d, Route No: %d, Passenger Count: %d, Status: %d, Passengers: ", ride_id, route_no, passenger_count, status);
+                    for (int j = 0; j < passenger_count && j < 4; j++)
+                    {
+                        printf("%d", passengers[j]);
+                        if (j < passenger_count - 1)
+                        {
+                            printf(", ");
+                        }
+                    }
+                    printf("\n");
+                    found = 1;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (!found)
+    {
+        if (user == NULL)
+        {
+            printf("No rides available.\n");
+        }
+        else
+        {
+            printf("No rides found for user with UID: %d\n", user->uid);
+        }
+    }
+
+    fclose(ptr);
+}
+
 // int main()
 // {
 //     struct Node *a = file_to_linkedlist(NULL);
 //     delete_user(1003, a);
+//     return 0;
+// }
+// int main()
+// {
+//     struct User a = {10, "a", "b"};
+//     view_ride(&a);
 //     return 0;
 // }

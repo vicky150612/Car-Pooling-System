@@ -186,6 +186,22 @@ int complete_ride(struct Ride *ride)
 
 int main()
 {
-
+    // int uid, xsa, ysa, xea, yea;
+    // printf("Enter your unique ID: ");
+    // scanf("%d", &uid);
+    // printf("Enter your starting coordinates (x, y): ");
+    // scanf("%d %d", &xsa, &ysa);
+    // printf("Enter your ending coordinates (x, y): ");
+    // scanf("%d %d", &xea, &yea);
+    // struct Passenger p = {uid, xsa, xea, ysa, yea};
+    // assign_passenger(p);
+    struct Ride *ride;
+    ride->ride_id = 1;
+    ride->route_no = 8;
+    ride->passenger_count = 2;
+    ride->status = 1;
+    ride->passengers[0] = (struct Passenger){1, 0, 0, 0, 0};
+    ride->passengers[1] = (struct Passenger){2, 0, 0, 0, 0};
+    complete_ride(ride);
     return 0;
 }

@@ -40,7 +40,6 @@ struct places *func(char *path, struct places *arr, struct places *data, int num
         path[i] = tolower(path[i]);
     }
     path[len] = '\0';
-
     for (int i = 0; i < number; i++)
     {
         char og_name[50];
@@ -51,7 +50,6 @@ struct places *func(char *path, struct places *arr, struct places *data, int num
             arr[i].name[j] = tolower(arr[i].name[j]);
         }
         arr[i].name[len] = '\0';
-
         if (strcmp(arr[i].name, path) == 0)
         {
             strcpy(arr[i].name, og_name);
@@ -61,7 +59,6 @@ struct places *func(char *path, struct places *arr, struct places *data, int num
             break;
         }
     }
-
     if (!foundexact)
     {
         for (int i = 0; i < number; i++)
@@ -74,7 +71,6 @@ struct places *func(char *path, struct places *arr, struct places *data, int num
                 arr[i].name[j] = tolower(arr[i].name[j]);
             }
             arr[i].name[len] = '\0';
-
             if (strstr(arr[i].name, path))
             {
                 strcpy(arr[i].name, og_name);
@@ -87,24 +83,24 @@ struct places *func(char *path, struct places *arr, struct places *data, int num
     return data;
 }
 
-int main()
-{
-    struct places *arr = pla();
-    struct places data[37];
-    char path[50];
-    printf("Enter the path: ");
-    scanf("%s", path);
-    func(path, arr, data, 37);
-    printf("Places found: \n");
-    if (!foundexact)
-    {
-        for (int i = 0; i < k; i++)
-        {
-            printf("%s\n", data[i].name);
-        }
-    }
-    else
-    {
-        printf("Exact match found: %s , %d,%d\n", data[0].name, data[0].cord_x, data[0].cord_y);
-    }
-}
+// int main()
+// {
+//     struct places *arr = pla();
+//     struct places data[37];
+//     char path[50];
+//     printf("Enter the path: ");
+//     scanf("%s", path);
+//     func(path, arr, data, 37);
+//     printf("Places found: \n");
+//     if (!foundexact)
+//     {
+//         for (int i = 0; i < k; i++)
+//         {
+//             printf("%s\n", data[i].name);
+//         }
+//     }
+//     else
+//     {
+//         printf("Exact match found: %s , %d,%d\n", data[0].name, data[0].cord_x, data[0].cord_y);
+//     }
+// }
