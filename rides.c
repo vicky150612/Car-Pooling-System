@@ -1,25 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "logic.c"
-
-struct Passenger
-{
-    int uid;
-    int xsa;
-    int xea;
-    int ysa;
-    int yea;
-};
-
-struct Ride
-{
-    int ride_id;
-    int route_no;
-    struct Passenger passengers[4];
-    int passenger_count;
-    int status;
-};
 
 void write_ride_to_file(struct Ride ride)
 {
@@ -97,6 +75,30 @@ void write_ride_to_file(struct Ride ride)
     }
 }
 
+int check_rides(int uid)
+{
+    FILE *file = fopen("rides.txt", "r");
+    int found = 0;
+    char line[256];
+    while (fgets(line, sizeof(line), file) != NULL)
+    {
+        int ride_id, route_no, passenger_count, status;
+        int passengers[4];
+        sscanf(line, "Ride ID: %d, Route No: %d, Passenger Count: %d, Status: %d, Passengers: %d, %d, %d, %d", &ride_id, &route_no, &passenger_count, &status, &passengers[0], &passengers[1], &passengers[2], &passengers[3]);
+        for (int i = 0; i < passenger_count && i < 4; i++)
+        {
+            if (passengers[i] == uid && status == 1)
+            {
+                found = ride_id;
+                break;
+            }
+        }
+    }
+
+    fclose(file);
+    return found;
+}
+
 int assign_passenger(struct Passenger passenger)
 {
     int route_no = route(passenger.xsa, passenger.ysa, passenger.xea, passenger.yea);
@@ -126,13 +128,11 @@ int assign_passenger(struct Passenger passenger)
                     }
                 }
                 fgetc(file);
-
                 if (passenger_exists)
                 {
                     fclose(file);
                     return 0;
                 }
-
                 if (d == 1 && c < 4)
                 {
                     struct Ride ride;
@@ -146,6 +146,7 @@ int assign_passenger(struct Passenger passenger)
                         ride.passengers[j + 1] = (struct Passenger){arr[j], 0, 0, 0, 0};
                     }
                     fclose(file);
+                    add_passenger(passenger, ride.ride_id);
                     write_ride_to_file(ride);
                     return 1;
                 }
@@ -158,8 +159,9 @@ int assign_passenger(struct Passenger passenger)
     ride.ride_id = rideid + 1;
     ride.route_no = route_no;
     ride.passenger_count = 1;
-    ride.status = 1; // marking the current status as ongoing
+    ride.status = 1;
     ride.passengers[0] = passenger;
+    add_passenger(passenger, ride.ride_id);
     write_ride_to_file(ride);
     return 1;
 }
@@ -184,24 +186,156 @@ int complete_ride(struct Ride *ride)
     }
 }
 
-int main()
+struct Ride ride_data(int ride_id)
 {
-    // int uid, xsa, ysa, xea, yea;
-    // printf("Enter your unique ID: ");
-    // scanf("%d", &uid);
-    // printf("Enter your starting coordinates (x, y): ");
-    // scanf("%d %d", &xsa, &ysa);
-    // printf("Enter your ending coordinates (x, y): ");
-    // scanf("%d %d", &xea, &yea);
-    // struct Passenger p = {uid, xsa, xea, ysa, yea};
-    // assign_passenger(p);
-    struct Ride *ride;
-    ride->ride_id = 1;
-    ride->route_no = 8;
-    ride->passenger_count = 2;
-    ride->status = 1;
-    ride->passengers[0] = (struct Passenger){1, 0, 0, 0, 0};
-    ride->passengers[1] = (struct Passenger){2, 0, 0, 0, 0};
-    complete_ride(ride);
-    return 0;
+    FILE *file = fopen("rides.txt", "r");
+    struct Ride ride;
+    char line[100];
+    while (fgets(line, sizeof(line), file) != NULL)
+    {
+        int ride_id1, route_no, passenger_count, status;
+        int passengers[4];
+        sscanf(line, "Ride ID: %d, Route No: %d, Passenger Count: %d, Status: %d, Passengers: %d, %d, %d, %d", &ride_id1, &route_no, &passenger_count, &status, &passengers[0], &passengers[1], &passengers[2], &passengers[3]);
+        if (ride_id1 == ride_id)
+        {
+            ride.ride_id = ride_id1;
+            ride.route_no = route_no;
+            ride.passenger_count = passenger_count;
+            ride.status = status;
+            for (int i = 0; i < passenger_count && i < 4; i++)
+            {
+                ride.passengers[i].uid = passengers[i];
+            }
+            fclose(file);
+            return ride;
+        }
+    }
+    fclose(file);
+    return ride;
+}
+
+void add_passenger(struct Passenger passenger, int ride_id)
+{
+    FILE *file = fopen("passengers.txt", "r");
+    FILE *file2 = fopen("temp.txt", "w");
+    struct Passenger passengers[4];
+    int i = 0;
+    char line[100];
+    while (fgets(line, sizeof(line), file) != NULL)
+    {
+        int passenger_count = 0;
+        int id = 0;
+        int index = 0;
+        int numchars = 0;
+        sscanf(line, "Ride ID: %d Passenger_count: %d Passengers: %n", &id, &passenger_count, &numchars);
+        index += numchars;
+        if (id == ride_id)
+        {
+            i++;
+            for (int j = 0; j < passenger_count; j++)
+            {
+                sscanf(&line[index], "%d %n", &passengers[j].uid, &numchars);
+                index += numchars;
+            }
+            index += 7;
+            for (int j = 0; j < passenger_count; j++)
+            {
+                sscanf(&line[index], "%d %d %d %d %n", &passengers[j].xea, &passengers[j].xsa, &passengers[j].yea, &passengers[j].ysa, &numchars);
+                index += numchars;
+            }
+            fprintf(file2, "Ride ID: %d Passenger_count: %d Passengers: ", id, passenger_count + 1);
+            for (int j = 0; j < passenger_count; j++)
+            {
+                fprintf(file2, "%d ", passengers[j].uid);
+            }
+            fprintf(file2, "%d ", passenger.uid);
+            fprintf(file2, "Cords: ");
+            for (int j = 0; j < passenger_count; j++)
+            {
+                fprintf(file2, "%d %d %d %d ", passengers[j].xea, passengers[j].xsa, passengers[j].yea, passengers[j].ysa);
+            }
+            fprintf(file2, "%d %d %d %d \n", passenger.xea, passenger.xsa, passenger.yea, passenger.ysa);
+        }
+        else
+        {
+            fprintf(file2, "%s", line);
+        }
+        break;
+    }
+    if (i == 0)
+    {
+        fprintf(file2, "Ride ID: %d Passenger_count: 1 Passengers: %d Cords: %d %d %d %d \n", ride_id, passenger.uid, passenger.xea, passenger.xsa, passenger.yea, passenger.ysa);
+    }
+    fclose(file);
+    fclose(file2);
+    remove("passengers.txt");
+    rename("temp.txt", "passengers.txt");
+}
+
+void view_all_rides()
+{
+    FILE *ptr = fopen("rides.txt", "r");
+    char line[100];
+    int i = 1;
+    while (fgets(line, sizeof(line), ptr))
+    {
+        printf("%d. %s", i, line);
+        i++;
+    }
+    fclose(ptr);
+}
+
+void prev_rides(char *username)
+{
+    int uid = finduser(username);
+    FILE *file = fopen("rides.txt", "r");
+    FILE *file2 = fopen("fare.txt", "r");
+    struct Ride ride;
+    char line[100];
+    int ride_id, route_no, passenger_count, status;
+    while (fgets(line, sizeof(line), file) != NULL)
+    {
+        int passengers[4];
+        sscanf(line, "Ride ID: %d, Route No: %d, Passenger Count: %d, Status: %d, Passengers: %d, %d, %d, %d", &ride_id, &route_no, &passenger_count, &status, &passengers[0], &passengers[1], &passengers[2], &passengers[3]);
+        int i;
+        for (i = 0; i < passenger_count; i++)
+        {
+            if (passengers[i] == uid)
+            {
+                printf("Ride ID: %d, Route No: %d, Passenger Count: %d, Status: ", ride_id, route_no, passenger_count);
+                if (status == 0)
+                {
+                    printf("Completed ");
+                }
+                else
+                {
+                    printf("Not Completed ");
+                }
+                break;
+            }
+        }
+    }
+    int fare[5];
+    while (fgets(line, sizeof(line), file2) != NULL)
+    {
+        int ride_id1, passengercount;
+        int index, numchars;
+        sscanf(line, "Ride ID: %d Passenger Count: %d Total Fare : %n", &ride_id1, &passengercount, &numchars);
+        index = numchars;
+        if (ride_id1 == ride_id)
+        {
+            for (int i = 0; i < passengercount + 1; i++)
+            {
+                sscanf(&line[index], "%d %n", &fare[i], &numchars);
+                index += numchars;
+            }
+        }
+    }
+    // for (int i = 0; i < 5; i++)
+    // {
+    //     printf("%d ", fare[i]);
+    // }
+    printf("Fare: %d\n", fare[1]);
+    fclose(file);
+    fclose(file2);
 }

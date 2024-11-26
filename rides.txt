@@ -1,2 +1,1 @@
-Ride ID: 1, Route No: 8, Passenger Count: 2, Status: 1, Passengers: 11, 12
-Ride ID: 2, Route No: 1, Passenger Count: 1, Status: 1, Passengers: 10
+Ride ID: 1, Route No: 8, Passenger Count: 2, Status: 0, Passengers: 1002, 1001

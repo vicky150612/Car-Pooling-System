@@ -3,6 +3,15 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <ctype.h>
+#include <time.h>
+#include "project.h"
+#include "logic.c"
+#include "admin.c"
+#include "login_logic.c"
+#include "rides.c"
+#include "search.c"
+#include "final_map.c"
 
 int get_terminal_width()
 {
@@ -12,6 +21,22 @@ int get_terminal_width()
         return 80; // Default width if terminal size can't be determined
     }
     return w.ws_col;
+}
+
+void pr_log(char *str)
+{
+    FILE *f = fopen("log.txt", "a");
+    time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+    char s[100];
+    strftime(s, sizeof(s), "%p", t);
+    int i = t->tm_hour;
+    if (i > 12)
+    {
+        i = i - 12;
+    }
+    fprintf(f, "%s %d:%d %s %d/%d/%d\n", str, i, t->tm_min, s, t->tm_mday, t->tm_mon, t->tm_year + 1900);
+    fclose(f);
 }
 
 void print_centered(const char *text)
@@ -25,20 +50,116 @@ void print_centered(const char *text)
         padding = 0;
 
     // Print padding spaces, then the text
-    print_centered("%*s%s\n", padding, "", text);
+    printf("%*s%s\n", padding, "", text);
 }
 
-void admin_or_user();
-void main_screen();
-void admin_login();
-void user_register();
-void user_login();
-void admin_page();
-void user_page();
-void view_profile();
-void book_ride();
-void previous_bookings();
-void view_map();
+void view_rides_of_user()
+{
+    system("clear");
+    print_centered("[#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#]\n");
+    print_centered("Enter the username of the user to view their rides \n\n");
+    char username[100];
+    scanf("%s", username);
+    int uid = finduser(username);
+    int found = 0;
+    if (uid == 69)
+    {
+        print_centered("User not found\n");
+        print_centered("Press enter to continue");
+        getchar();
+        getchar();
+        return;
+    }
+    else
+    {
+        FILE *file = fopen("rides.txt", "r");
+        char line[100];
+        while (fgets(line, sizeof(line), file) != NULL)
+        {
+            int ride_id, route_no, passenger_count, status;
+            int passengers[4];
+            sscanf(line, "Ride ID: %d, Route No: %d, Passenger Count: %d, Status: %d, Passengers: %d, %d, %d, %d", &ride_id, &route_no, &passenger_count, &status, &passengers[0], &passengers[1], &passengers[2], &passengers[3]);
+            for (int i = 0; i < passenger_count && i < 4; i++)
+            {
+                if (passengers[i] == uid)
+                {
+                    found = 1;
+                    printf("Ride ID: %d, Route No: %d, Passenger Count: %d, Status: %d, Passengers:", ride_id, route_no, passenger_count, status);
+                    for (int j = 0; j < passenger_count; j++)
+                    {
+                        printf("%d ", passengers[j]);
+                    }
+                }
+            }
+        }
+        fclose(file);
+        if (!found)
+        {
+            printf("No rides found for the user\n");
+        }
+        printf("\n");
+    }
+    print_centered("\n");
+    print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
+    print_centered("\n");
+    print_centered("Press Enter to continue");
+    getchar();
+    getchar();
+}
+void view_total_revenue()
+{
+    system("clear");
+    FILE *fp = fopen("fare.txt", "r");
+    int total_revenue = 0;
+    int total_rides = 0;
+    char line[100];
+    int rideid, passenger_count, fare;
+    while (fgets(line, sizeof(line), fp) != NULL)
+    {
+        sscanf(line, "Ride ID: %d Passenger Count: %d Total Fare : %d", &rideid, &passenger_count, &fare);
+        total_revenue += fare;
+        total_rides++;
+    }
+    print_centered("\n");
+    print_centered("Total number of Rides are ");
+    char text[10];
+    sprintf(text, "%d\n", total_rides);
+    text[strlen(text) - 1] = ' ';
+    print_centered(text);
+    print_centered("Total Revenue is ");
+    char text1[10];
+    sprintf(text1, "%d\n", total_revenue);
+    text1[strlen(text1) - 1] = ' ';
+    print_centered(text1);
+    print_centered("\n");
+    fclose(fp);
+    print_centered("Press Enter to continue ");
+    getchar();
+    getchar();
+    admin_page();
+}
+
+void user_log()
+{
+    system("clear");
+    print_centered("\n");
+    print_centered("<><><><><><><><><><><><><><><><><><><><><><><\n");
+    print_centered("User Log\n");
+    FILE *file = fopen("log.txt", "r");
+    char line[100];
+    int count = 0;
+    while (fgets(line, sizeof(line), file) != NULL)
+    {
+        print_centered(("%s\n", line));
+    }
+    fclose(file);
+    print_centered("\n");
+    print_centered("<><><><><><><><><><><><><><><><><><><><><><><\n");
+    print_centered("\n");
+    print_centered("Press Enter to continue");
+    getchar();
+    getchar();
+}
 
 void admin_or_user()
 {
@@ -65,12 +186,12 @@ void admin_or_user()
     print_centered("  | |             Press Enter                                                     Press Enter             | |\n");
     print_centered("  | |_____________________________________________________________________________________________________| |\n");
     print_centered("  \\_________________________________________________________________________________________________________/\n");
-    print_centered("                                                    ||   ||\n");
-    print_centered("                                                    ||   ||\n");
-    print_centered("                                                    _________\n");
-    print_centered("                                                   /__|__|___\\__\n");
-    print_centered("                                                  |--(o)---(o)--|\n");
-    print_centered("                                                  ^^^^^^^^^^^^^^^\n");
+    print_centered("||   ||\n");
+    print_centered("||   ||\n");
+    print_centered("_________\n");
+    print_centered("/__|__|___\\__\n");
+    print_centered("|--(o)---(o)--|\n");
+    print_centered("^^^^^^^^^^^^^^^\n");
 
     option = getchar();
     getchar(); // Clear the newline character from the buffer
@@ -85,6 +206,7 @@ void admin_or_user()
     }
     else if (option == 'e')
     {
+        system("clear");
         exit(0);
     }
     else
@@ -124,12 +246,12 @@ void main_screen()
     print_centered("  | |             Press Enter                                                     Press Enter             | |\n");
     print_centered("  | |_____________________________________________________________________________________________________| |\n");
     print_centered("  \\_________________________________________________________________________________________________________/\n");
-    print_centered("                                                    ||   ||\n");
-    print_centered("                                                    ||   ||\n");
-    print_centered("                                                    _________\n");
-    print_centered("                                                   /__|__|___\\__\n");
-    print_centered("                                                  |--(o)---(o)--|\n");
-    print_centered("                                                  ^^^^^^^^^^^^^^^\n");
+    print_centered("||   ||\n");
+    print_centered("||   ||\n");
+    print_centered("_________\n");
+    print_centered("/__|__|___\\__\n");
+    print_centered("|--(o)---(o)--|\n");
+    print_centered("^^^^^^^^^^^^^^^\n");
 
     option = getchar();
     getchar(); // Clear the newline character from the buffer
@@ -176,8 +298,9 @@ void admin_login()
     {
         admin_or_user();
     }
-    else if (strcmp(pass, "admin123") == 0)
+    else if (strcmp(pass, admin_password) == 0)
     {
+        pr_log(("Admin login successful "));
         print_centered("Login is successful\n");
         print_centered("/////////////////////////////////////////////\n");
         print_centered("Press enter to continue\n");
@@ -186,6 +309,7 @@ void admin_login()
     }
     else
     {
+        pr_log(("Admin login failed "));
         print_centered("********************************\n");
         print_centered("ERROR\n");
         print_centered("INVALID ADMIN CREDENTIALS\n");
@@ -200,8 +324,6 @@ void user_register()
 {
     system("clear");
     char username[100], password[100], confirm_password[100];
-    int registration = 0;
-
     print_centered("/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\n");
     print_centered("Press b to go back\n");
     print_centered("\n");
@@ -214,6 +336,7 @@ void user_register()
     print_centered("Please enter your desired username:\n");
     scanf("%s", username);
     getchar(); // Clear the newline character from the buffer
+    int r = 0;
 
     if (strcmp(username, "b") == 0)
     {
@@ -233,16 +356,26 @@ void user_register()
 
     if (strcmp(password, confirm_password) == 0)
     {
-        registration = 1; // Dummy logic for successful registration
+        r = registration(username, password);
     }
     else
     {
-        registration = 0; // Dummy logic for unsuccessful registration
+        print_centered("********************************\n");
+        print_centered("ERROR\n");
+        print_centered("PASSWORDS DO NOT MATCH\n");
+        print_centered("********************************\n");
+        print_centered("Press Enter to retry\n");
+        getchar(); // Wait for Enter key
+        user_register();
+        return;
     }
 
     print_centered("\n");
-    if (registration == 1)
+    if (r == 1)
     {
+        char text[100] = "New registration : ";
+        strcat(text, username);
+        pr_log(text);
         print_centered("You have successfully registered\n");
         print_centered("You can now login with your new credentials\n");
         print_centered("\n");
@@ -250,10 +383,18 @@ void user_register()
         print_centered("Press Enter to continue\n");
         getchar(); // Wait for Enter key
         main_screen();
+        return;
     }
     else
     {
+        print_centered("********************************\n");
+        print_centered("ERROR\n");
+        print_centered("USERNAME ALREADY EXISTS\n");
+        print_centered("********************************\n");
+        print_centered("Press Enter to retry\n");
+        getchar(); // Wait for Enter key
         user_register();
+        return;
     }
 }
 
@@ -285,21 +426,46 @@ void user_login()
     scanf("%s", password);
     getchar(); // Clear the newline character from the buffer
 
+    login = login_check(username, password);
+
     if (login == 1)
-    { // Dummy logic for successful login
+    {
+        char text[100] = "Login attempt success : ";
+        strcat(text, username);
+        pr_log(text);
         print_centered("LOGIN WAS SUCCESSFUL\n");
         print_centered("\n");
         print_centered("/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\n");
         print_centered("Press Enter to continue\n");
         getchar(); // Wait for Enter key
-        user_page();
+        user_page(username, password);
+        return;
     }
-    else
+    else if (login == 0)
     {
+        char text[100] = "Login attempt failed : ";
+        strcat(text, username);
+        pr_log(text);
+        print_centered("********************************\n");
+        print_centered("INCORRECT USERNAME OR PASSWORD\n");
+        print_centered("********************************\n");
+        print_centered("Press Enter to retry\n");
+        getchar(); // Wait for Enter key
         user_login();
+        return;
+    }
+    else if (login == 3)
+    {
+        print_centered("********************************\n");
+        print_centered("USER DOES NOT EXIST\n");
+        print_centered("********************************\n");
+        print_centered("Press Enter to retry\n");
+        getchar(); // Wait for Enter key
+        user_login();
+        return;
     }
 }
-void user_page()
+void user_page(char username[], char password[])
 {
     system("clear");
     print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
@@ -324,23 +490,34 @@ void user_page()
     scanf("%d", &choice);
     if (choice == 1)
     {
-        view_profile();
+        view_profile(username, password);
     }
     else if (choice == 2)
     {
-        book_ride();
+        int uid = finduser(username);
+        if (check_rides(uid))
+        {
+            ongoing_ride(uid, username, password);
+        }
+        else
+        {
+            book_ride(username, password);
+        }
     }
     else if (choice == 3)
     {
-        previous_bookings();
+        previous_bookings(username, password);
     }
     else if (choice == 4)
     {
-        view_map();
+        view_map(username, password);
     }
     else if (choice == 5)
     {
         system("clear");
+        char text[100] = "User has logged out : ";
+        strcat(text, username);
+        pr_log(text);
         print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
         print_centered("\n");
         print_centered("YOU HAVE LOGGED OUT SUCCESSFULLY");
@@ -348,7 +525,7 @@ void user_page()
         print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
         print_centered("Press Enter to continue\n");
         getchar(); // Wait for Enter key
-        user_login();
+        main_screen();
     }
     else
     {
@@ -358,27 +535,51 @@ void user_page()
         print_centered("********************************\n");
         print_centered("Press Enter to retry\n");
         getchar(); // Wait for Enter key
-        user_page();
+        user_page(username, password);
     }
 }
-void view_profile()
+void view_profile(char username[], char password[])
 {
+    int user_id = finduser(username);
     system("clear");
     print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
-    previous_bookings("Type b and press enter to go back");
+    print_centered("Type b to go back");
     print_centered("\n");
     print_centered("PROFILE\n");
     print_centered("\n");
-    print_centered("USERNAME: %s\n", username);
+    print_centered(("USERNAME: %s\n", username));
     print_centered("\n");
     // more features to be filled
+    // delete account
+    print_centered("DELETE ACCOUNT :\n");
+    print_centered("Type d to delete your account");
     print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
     print_centered("\n");
     char back;
-    scanf("&c", &back);
-    if (back == 'b')
+    getchar();
+    scanf("%c", &back);
+    getchar(); // Consume the newline character left in the input buffer
+    if (back == 'd')
     {
-        user_page();
+        // confirm delete
+        print_centered("Are you sure you want to delete this account");
+        print_centered("\n");
+        print_centered("Type y to confirm deletion");
+        char c = getchar();
+        if (c == 'y')
+        {
+            delete_user(user_id);
+            print_centered("Account deleted successfully");
+            print_centered("\n");
+            print_centered("Press Enter to continue\n");
+            getchar(); // Wait for Enter key
+            main_screen();
+            return;
+        }
+    }
+    else if (back == 'b')
+    {
+        user_page(username, password);
     }
     else
     {
@@ -387,75 +588,143 @@ void view_profile()
         print_centered("PLEASE ENTER A VALID OPTION\n");
         print_centered("********************************\n");
         print_centered("Press Enter to retry\n");
-        getchar(); // Wait for Enter key
-        view_profile();
+        getchar();                        // Wait for Enter key
+        view_profile(username, password); //
     }
 }
-void book_ride()
+
+void book_ride(char username[], char password[])
 {
     system("clear");
     print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
-    previous_bookings("Type b and press enter to go back");
+    print_centered("Type b to go back");
     print_centered("\n");
     print_centered("RIDE BOOKING\n");
     print_centered("\n");
-    printf_centered("Please enter your pickup location: \n");
+    print_centered("Please enter your pickup location: \n");
+    foundexact = 0;
+    k = 0;
+    int xsa, xea, ysa, yea;
     char pickup[100];
-    scanf("%s", &pickup);
-    // give search results and confirm the pickup location
-    if (pickup == 'b')
-    {
-        user_page();
-    }
-    printf_centered("Please enter your drop location: \n");
     char drop[100];
-    scanf("%s", &drop);
-    // give search results and confirm the drop location
-    if (drop == 'b')
+    while (!foundexact)
     {
-        user_page();
+        scanf("%s", pickup);
+        if (pickup[0] == 'b' && strlen(pickup) == 1)
+        {
+            user_page(username, password);
+        }
+        else
+        {
+            struct places data[37] = {};
+            func(pickup, data);
+            if (!foundexact)
+            {
+                print_centered("Matches Found \n");
+                print_centered("Please enter any of the following \n");
+                for (int i = 0; i < k; i++)
+                {
+                    printf("%s\n", data[i].name);
+                }
+                printf("\n\n");
+            }
+            else
+            {
+                xsa = data[0].cord_x;
+                ysa = data[0].cord_y;
+            }
+        }
+    }
+    print_centered("Please enter your drop location: \n");
+    foundexact = 0;
+    k = 0;
+    while (!foundexact)
+    {
+        scanf("%s", drop);
+        if (drop[0] == 'b' && strlen(drop) == 1)
+        {
+            user_page(username, password);
+        }
+        else
+        {
+            struct places data[37] = {};
+            func(drop, data);
+            if (!foundexact)
+            {
+                print_centered("Matches Found \n");
+                print_centered("Please enter any of the following \n");
+                for (int i = 0; i < k; i++)
+                {
+                    printf("%s\n", data[i].name);
+                }
+                printf("\n\n");
+            }
+            else
+            {
+                xea = data[0].cord_x;
+                yea = data[0].cord_y;
+            }
+        }
     }
     // return status of booking
     int booking;
+    int uid = finduser(username);
+    struct Passenger p = {uid, xsa, xea, ysa, yea};
+    booking = assign_passenger(p);
     if (booking == 1)
     {
         system("clear");
+        char text[100] = "User ";
+        strcat(text, username);
+        strcat(text, " has booked a ride from ");
+        strcat(text, pickup);
+        strcat(text, " to ");
+        strcat(text, drop);
+        pr_log(text);
         print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
         print_centered("\n");
-        printf_centered("BOOKING SUCCESSFUL\n");
+        print_centered("BOOKING SUCCESSFUL\n");
         print_centered("\n");
-        // here give the driver and car details etc
-        print_centered("Press enter to proceed back to the main menu\n");
+        // here give the driver and car details etcstrcat
+        print_centered("Press enter to view ride details\n");
         print_centered("\n");
         print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
+        getchar();
         getchar(); // Wait for Enter key
+        user_page(username, password);
     }
     else if (booking == 0)
     {
         system("clear");
+        char text[100] = "User ";
+        strcat(text, username);
+        strcat(text, " booking attemt failed ");
+        pr_log(text);
         print_centered("********************************\n");
         print_centered("ERROR\n");
         print_centered("BOOKING FAILED\n");
         print_centered("********************************\n");
         print_centered("Press Enter to retry\n");
         getchar(); // Wait for Enter key
+        book_ride(username, password);
     }
 }
-void previous_bookings()
+void previous_bookings(char username[], char password[])
 {
     system("clear");
     print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
-    previous_bookings("Type b and press enter to go back\n");
-    previous_bookings("\n");
-    // connect this with the database created by keyur
-    previous_bookings("\n");
+    print_centered("Type b and press enter to go back\n");
+    print_centered("\n");
+    prev_rides(username);
+    print_centered("\n");
     print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
-    previous_bookings("\n");
+    print_centered("\n");
     char back;
-    scanf("&c", &back);
+    getchar();
+    scanf("%c", &back);
     if (back == 'b')
     {
-        user_page();
+        user_page(username, password);
     }
     else
     {
@@ -465,20 +734,21 @@ void previous_bookings()
         print_centered("********************************\n");
         print_centered("Press Enter to retry\n");
         getchar(); // Wait for Enter key
-        previous_bookings();
+        previous_bookings(username, password);
     }
 }
-void view_map()
+void view_map(char username[], char password[])
 {
     system("clear");
-    // print the map
+    map();
     print_centered("\n");
     print_centered("Type b and press enter to go back\n");
     char back;
-    scanf("&c", &back);
+    getchar();
+    scanf("%c", &back);
     if (back == 'b')
     {
-        user_page();
+        user_page(username, password);
     }
     else
     {
@@ -488,7 +758,7 @@ void view_map()
         print_centered("********************************\n");
         print_centered("Press Enter to retry\n");
         getchar();
-        view_map();
+        view_map(username, password);
     }
 }
 void admin_page()
@@ -516,22 +786,72 @@ void admin_page()
     print_centered("\n");
     print_centered("[#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#]\n");
     char option;
-    scanf("&c", &option);
+    scanf("%c", &option);
     if (option == '1')
     {
+        pr_log(("Admin accesed user data "));
         view_all_users();
     }
     else if (option == '2')
     {
-        delete_user();
+        system("clear");
+        print_centered("[#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#]\n");
+        print_centered("Enter the Username to delete: \n");
+        char username[100];
+        scanf("%s", username);
+        int uid = finduser(username);
+        if (uid == 69)
+        {
+            print_centered("User not found\n");
+            print_centered("Press Enter to continue\n");
+            getchar();
+            getchar();
+            admin_page();
+        }
+        print_centered("ARE YOU SURE YOU WANT TO DELETE THIS ?(y/n) \n");
+        char confirm;
+        getchar();
+        scanf("%c", &confirm);
+        if (confirm == 'y')
+        {
+            delete_user(uid);
+            char text[100] = "Admin deleted user : ";
+            strcat(text, username);
+            pr_log(text);
+            print_centered("User deleted successfully\n");
+            print_centered("Press Enter to continue\n");
+            getchar();
+            getchar();
+            admin_page();
+        }
+        else
+        {
+            print_centered("Deletion Cancelled\n");
+            print_centered("Press Enter to continue\n");
+            getchar();
+            admin_page();
+        }
     }
     else if (option == '3')
     {
+        pr_log(("Admin acssesed ride data "));
+        system("clear");
+        print_centered("[#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#]\n");
+        print_centered("ALL Rides\n");
+        print_centered("[#][#][#][#][#][#][#][#][#][#][#][#][#]");
+        print_centered("---------------------------------\n");
         view_all_rides();
+        print_centered("[#][#][#][#][#][#][#][#][#][#][#][#][#]\n");
+        print_centered("Press Enter to continue\n");
+        getchar();
+        getchar();
+        admin_page();
     }
     else if (option == '4')
     {
+        pr_log(("Admin acssesed ride data "));
         view_rides_of_user();
+        admin_page();
     }
     else if (option == '5')
     {
@@ -540,9 +860,11 @@ void admin_page()
     else if (option == '6')
     {
         user_log();
+        admin_page();
     }
     else if (option == '7')
     {
+        pr_log(("Admin logged out "));
         system("clear");
         print_centered("[#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#]\n");
         print_centered("\n");
@@ -551,7 +873,7 @@ void admin_page()
         print_centered("[#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#][#]\n");
         print_centered("Press Enter to continue\n");
         getchar(); // Wait for Enter key
-        main_screen();
+        admin_or_user();
     }
     else
     {
@@ -563,4 +885,130 @@ void admin_page()
         getchar();
         admin_page();
     }
+}
+
+void ongoing_ride(int uid, char username[], char password[])
+{
+    system("clear");
+    print_centered("\n");
+    print_centered("Type b and press enter to go back\n");
+    print_centered("\n");
+    int ride_id = check_rides(uid);
+    struct Ride ride = ride_data(ride_id);
+    print_centered("Ride Details:");
+    print_centered("\n");
+    print_centered(("%s", drives[ride.route_no - 1]));
+    print_centered("\n");
+    if (ride.passenger_count > 1)
+    {
+        print_centered(("Your copassengers are \n\n"));
+        for (int i = 0; i < ride.passenger_count; i++)
+        {
+            char copassenger_username[100];
+            if (uid != ride.passengers[i].uid)
+            {
+                user(ride.passengers[i].uid, copassenger_username);
+                print_centered(("%s\n", copassenger_username));
+            }
+        }
+        print_centered("\n");
+        print_centered("Type s to start the ride \n\n");
+        char x;
+        scanf("%c", &x);
+        scanf("%c", &x);
+        if (x == 's')
+        {
+            getchar();
+            print_centered("Your ride has been started\n");
+            print_centered("Press c to complete the ride\n");
+            scanf("%c", &x);
+            // getchar();
+            if (x == 'c')
+            {
+                complete_ride(&ride);
+                int fare = cal_fare(ride_id, uid);
+                printf("\n");
+                char text[100] = "User completed ride : ";
+                strcat(text, username);
+                pr_log(text);
+                printf("User completed ride\n");
+                printf("Fare: %d\n", fare);
+                print_centered("Press Enter to go back to user page\n");
+                getchar();
+                getchar();
+                user_page(username, password);
+            }
+            else
+            {
+                print_centered("Invalid option");
+                print_centered("Press Enter to retry");
+                getchar();
+                ongoing_ride(uid, username, password);
+            }
+        }
+        if (x == 'b')
+        {
+            user_page(username, password);
+        }
+    }
+    else
+    {
+        print_centered("No co-passengers are currently on this ride\n");
+    }
+    getchar();
+    char a = getchar();
+    if (a == 'b')
+    {
+        user_page(username, password);
+    }
+    else
+    {
+        print_centered("Invalid input\n");
+        print_centered("Press Enter to continue\n");
+        getchar();
+        ongoing_ride(uid, username, password);
+    }
+}
+
+void view_all_users()
+{
+    system("clear");
+    print_centered("All users are:");
+    print_centered("\n");
+    view_user_data();
+    print_centered("\n");
+    print_centered("Search a specific user (b to go back): ");
+    // search for the user with username
+    char username[100];
+    scanf("%s", username);
+    if (username[0] == 'b' && strlen(username) == 1)
+    {
+        admin_page();
+    }
+    system("clear");
+    printf("User details are:\n");
+    printf("\n");
+    printf("\n");
+    printf("\n");
+    printf("\n");
+    print_user(username);
+    getchar();
+    print_centered("\n");
+    print_centered("Press Enter to continue\n");
+    getchar();
+    admin_page();
+}
+
+int main()
+{
+    FILE *file1 = fopen("users.txt", "a");
+    fclose(file1);
+    FILE *file2 = fopen("rides.txt", "a");
+    fclose(file2);
+    FILE *file3 = fopen("passengers.txt", "a");
+    fclose(file3);
+    FILE *file4 = fopen("log.txt", "a");
+    fclose(file4);
+    system("clear");
+    admin_or_user();
 }

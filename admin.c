@@ -1,18 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "search.c"
-
-struct User
-{
-    int uid;
-    char username[50];
-    char password[50];
-};
-struct Node
-{
-    struct User data;
-    struct Node *next;
-};
 void add_place(char *name, int cord_x, int cord_y)
 {
     FILE *ptr = NULL;
@@ -59,63 +44,6 @@ void delete_place(char *name)
     fclose(temp);
     remove("places.txt");
     rename("temp.txt", "places.txt");
-}
-
-struct Node *delete_user(int uid, struct Node *head)
-{
-    FILE *ptr = fopen("users.txt", "r");
-    FILE *temp = fopen("temp.txt", "w");
-    char line[100];
-    while (fgets(line, sizeof(line), ptr) != NULL)
-    {
-        int user_id;
-        sscanf(line, "%d,", &user_id);
-        if (user_id != uid)
-        {
-            fprintf(temp, "%s", line);
-        }
-    }
-    fclose(ptr);
-    fclose(temp);
-    remove("users.txt");
-    rename("temp.txt", "users.txt");
-
-    struct Node *n = head;
-    struct Node *c = head->next;
-    if (n->data.uid == uid)
-    {
-        n = n->next;
-        c = c->next;
-        free(n);
-    }
-    n->next = c->next;
-    return head;
-}
-
-struct User search_user(int uid, struct Node *head)
-{
-    head = file_to_linkedlist(head);
-    struct Node *start = head;
-    while (start != NULL)
-    {
-        if (start->data.uid == uid)
-        {
-            return start->data;
-        }
-        start = start->next;
-    }
-}
-
-void view_user_data()
-{
-    FILE *ptr = NULL;
-    ptr = fopen("users.txt", "r");
-    char line[100];
-    while (fgets(line, sizeof(line), ptr) != NULL)
-    {
-        printf("%s", line);
-    }
-    fclose(ptr);
 }
 
 void view_ride(struct User *user)

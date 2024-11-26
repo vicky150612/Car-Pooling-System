@@ -1,51 +1,40 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-struct User
-{
-    int uid;
-    char *username;
-    char *password;
-};
-
-struct Node
-{
-    struct User data;
-    struct Node *next;
-};
-
 struct Node *head = NULL;
 
-void add_userdata()
+void set_userdata()
 {
     FILE *ptr = fopen("users.txt", "r");
-    struct Node *current = NULL;
-    struct Node *new_node = NULL;
-
-    while (!feof(ptr))
+    struct Node *temp;
+    while (head != NULL)
     {
-        new_node = (struct Node *)malloc(sizeof(struct Node));
-        new_node->data.username = (char *)malloc(50 * sizeof(char));
-        new_node->data.password = (char *)malloc(50 * sizeof(char));
+        temp = head;
+        head = head->next;
+        free(temp);
+    }
 
-        fscanf(ptr, "%d,%[^,],%[^,\n]", &new_node->data.uid, new_node->data.username, new_node->data.password);
-        new_node->data.username = realloc(new_node->data.username, strlen(new_node->data.username) + 1);
-        new_node->data.password = realloc(new_node->data.password, strlen(new_node->data.password) + 1);
-        new_node->next = NULL;
+    head = NULL;
+    struct Node *current = NULL;
 
-        if (head == NULL)
+    while (1)
+    {
+        struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
+        if (fscanf(ptr, "%d,%[^,],%s\n", &new_node->data.uid, new_node->data.username, new_node->data.password) == 3)
         {
-            head = new_node;
+            new_node->next = NULL;
+            if (head == NULL)
+            {
+                head = new_node;
+                current = head;
+            }
+            else
+            {
+                current->next = new_node;
+                current = new_node;
+            }
         }
         else
         {
-            current = head;
-            while (current->next != NULL)
-            {
-                current = current->next;
-            }
-            current->next = new_node;
+            free(new_node);
+            break;
         }
     }
 
@@ -54,7 +43,6 @@ void add_userdata()
 
 int finduser(char *username)
 {
-    add_userdata();
     struct Node *current = head;
 
     while (current != NULL)
@@ -65,19 +53,40 @@ int finduser(char *username)
         }
         current = current->next;
     }
-
     return 69;
+}
+
+void delete_user(int uid)
+{
+    FILE *ptr = fopen("users.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+    char line[100];
+    while (fgets(line, sizeof(line), ptr))
+    {
+        int user_id;
+        sscanf(line, "%d,", &user_id);
+        if (user_id != uid)
+        {
+            fprintf(temp, "%s", line);
+        }
+    }
+    fclose(ptr);
+    fclose(temp);
+    remove("users.txt");
+    rename("temp.txt", "users.txt");
+    set_userdata();
 }
 
 int registration(char *username, char *password)
 {
+    set_userdata();
+
     if (finduser(username) == 69)
     {
-        int max_uid = 0;
+        int max_uid = 1000;
         struct Node *current = head;
 
-        max_uid = 0;
-        while (current->next != NULL)
+        while (current != NULL)
         {
             if (current->data.uid > max_uid)
             {
@@ -85,21 +94,14 @@ int registration(char *username, char *password)
             }
             current = current->next;
         }
-        current = head;
+
         int unique_uid = max_uid + 1;
+
         FILE *ptr = fopen("users.txt", "a");
         fprintf(ptr, "%d,%s,%s\n", unique_uid, username, password);
         fclose(ptr);
 
-        struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
-        new_node->data.uid = unique_uid;
-        new_node->data.username = malloc(strlen(username) + 1);
-        strcpy(new_node->data.username, username);
-        new_node->data.password = malloc(strlen(password) + 1);
-        strcpy(new_node->data.password, password);
-        new_node->next = head;
-        head = new_node;
-
+        set_userdata();
         return 1;
     }
     else
@@ -110,6 +112,7 @@ int registration(char *username, char *password)
 
 int login_check(char *username, char *password)
 {
+    set_userdata();
     int userid = finduser(username);
     struct Node *current = head;
 
@@ -119,20 +122,25 @@ int login_check(char *username, char *password)
         {
             if (strcmp(current->data.password, password) == 0)
             {
-                return 1; // success
+                return 1;
             }
             else
             {
-                return 0; // invalid password
+                return 0;
             }
         }
         current = current->next;
     }
-
-    return 3; // user not found
+    return 3;
 }
 
-int main()
+void view_user_data()
 {
-    return 0;
+    set_userdata();
+    struct Node *current = head;
+    while (current->next != NULL)
+    {
+        printf("UID: %d, Username: %s\n", current->data.uid, current->data.username);
+        current = current->next;
+    }
 }

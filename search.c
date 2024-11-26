@@ -1,19 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-
-struct places
-{
-    char name[50];
-    int cord_x;
-    int cord_y;
-};
-
 struct places *pla()
 {
     FILE *ptr = NULL;
-    static struct places arr[37];
+    static struct places arr[no_of_places];
     int line = 0;
     int read = 0;
     ptr = fopen("places.txt", "r");
@@ -31,8 +19,11 @@ struct places *pla()
 
 int k = 0;
 int foundexact = 0;
-struct places *func(char *path, struct places *arr, struct places *data, int number)
+struct places *func(char *path, struct places *data)
 {
+    struct places *arr;
+    arr = malloc(no_of_places * sizeof(struct places));
+    arr = pla();
     foundexact = 0;
     int len = strlen(path);
     for (int i = 0; i < len; i++)
@@ -40,7 +31,7 @@ struct places *func(char *path, struct places *arr, struct places *data, int num
         path[i] = tolower(path[i]);
     }
     path[len] = '\0';
-    for (int i = 0; i < number; i++)
+    for (int i = 0; i < no_of_places; i++)
     {
         char og_name[50];
         strcpy(og_name, arr[i].name);
@@ -61,7 +52,7 @@ struct places *func(char *path, struct places *arr, struct places *data, int num
     }
     if (!foundexact)
     {
-        for (int i = 0; i < number; i++)
+        for (int i = 0; i < no_of_places; i++)
         {
             char og_name[50];
             strcpy(og_name, arr[i].name);
@@ -83,24 +74,68 @@ struct places *func(char *path, struct places *arr, struct places *data, int num
     return data;
 }
 
+void user(int uid, char *username)
+{
+    FILE *file = fopen("users.txt", "r");
+    char line[100];
+    while (fgets(line, 100, file))
+    {
+        int id;
+        char name[50];
+        char password[50];
+        sscanf(line, "%d,%[^,],%s\n", &id, name, password);
+        if (id == uid)
+        {
+            strcpy(username, name);
+            break;
+        }
+    }
+    fclose(file);
+}
+
+void print_user(char username[])
+{
+    // print user details from users.txt
+    FILE *file = fopen("users.txt", "r");
+    char line[100];
+    int found = 0;
+    while (fgets(line, 100, file))
+    {
+        int id;
+        char name[50];
+        char password[50];
+        sscanf(line, "%d,%[^,],%s\n", &id, name, password);
+        if (strcmp(name, username) == 0)
+        {
+            found = 1;
+            printf("ID: %d\nUsername: %s\n", id, name);
+            break;
+        }
+    }
+    if (!found)
+    {
+        printf("User not found\n");
+    }
+}
+
 // int main()
 // {
 //     struct places *arr = pla();
-//     struct places data[37];
+// struct places data[37];
 //     char path[50];
 //     printf("Enter the path: ");
 //     scanf("%s", path);
 //     func(path, arr, data, 37);
 //     printf("Places found: \n");
-//     if (!foundexact)
+// if (!foundexact)
+// {
+//     for (int i = 0; i < k; i++)
 //     {
-//         for (int i = 0; i < k; i++)
-//         {
-//             printf("%s\n", data[i].name);
-//         }
+//         printf("%s\n", data[i].name);
 //     }
-//     else
-//     {
-//         printf("Exact match found: %s , %d,%d\n", data[0].name, data[0].cord_x, data[0].cord_y);
-//     }
+// }
+// else
+// {
+//     printf("Exact match found: %s , %d,%d\n", data[0].name, data[0].cord_x, data[0].cord_y);
+// }
 // }

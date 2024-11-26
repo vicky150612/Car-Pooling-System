@@ -1,0 +1,44 @@
+void map()
+{
+	printf("                                                                               o Kunthala\n");
+	printf("                                                                               |\n");
+	printf("                                                             Chocolate Factory o\n");
+	printf("                                                                               |\n");
+	printf("                                                                               o Wakanda\n");
+	printf("                                                                               |\n");
+	printf("                                                                         Essos o\n");
+	printf("                                                                               |\n");
+	printf("                                                                               o Los Santos\n");
+	printf("                                                                               |\n");
+	printf("                                                                     Hogsmeade o\n");
+	printf("                                                                               |\n");
+	printf("                                                                               o Hogwarts\n");
+	printf("                                                                               |\n");
+	printf("                                                                     EL Dorado o\n");
+	printf("                                                                               |\n");
+	printf("                                                                               o Kamat Nilay \n");
+	printf("                                                                               |\n");
+	printf("                                                                               |\n");
+	printf("Maalava Islands   Helheim            Valyria        Gotham        Fort Agarwal |         Rudragarh     Kirrin Island     Dragon Stone     Paadgaghattam\n");
+	printf("       o-------o------o--------o---------o-------o-----o------o----------o------+-----o-------o------o--------o--------o-------o--------o--------o---------o\n");
+	printf("           Red Sea       Dharmasthali       Vice City     Pandora              | Kalyan Puram    Khansaar          Arrakis          Shambhala       Udayagiri Hills\n");
+	printf("                                                                               |\n");
+	printf("                                                                               |\n");
+	printf("                                                                          SIIT o\n");
+	printf("                                                                               |\n");
+	printf("                                                                               o Atlantis\n");
+	printf("                                                                               |\n");
+	printf("                                                                    New Asgard o\n");
+	printf("                                                                               |\n");
+	printf("                                                                               o King's Landing\n");
+	printf("                                                                               |\n");
+	printf("                                                                       Agrabah o\n");
+	printf("                                                                               |\n");
+	printf("                                                                               o Olympics\n");
+	printf("                                                                               |\n");
+	printf("                                                                         Elbaf o\n");
+	printf("                                                                               |\n");
+	printf("                                                                               o Dholakpur\n");
+	printf("                                                                               |\n");
+	printf("                                                               Shoorani Forest o\n");
+}
