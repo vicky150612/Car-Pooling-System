@@ -12,6 +12,16 @@
 #include "rides.c"
 #include "search.c"
 #include "final_map.c"
+int naaistam = 0;
+
+#define RESET "\x1b[0m"
+#define RED "\x1b[31m"
+#define GREEN "\x1b[32m"
+#define YELLOW "\x1b[33m"
+#define BLUE "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN "\x1b[36m"
+#define WHITE "\x1b[37m"
 
 int get_terminal_width()
 {
@@ -122,7 +132,7 @@ void view_total_revenue()
     }
     print_centered("\n");
     print_centered("Total number of Rides are ");
-    char text[10];
+    char text[20];
     sprintf(text, "%d\n", total_rides);
     text[strlen(text) - 1] = ' ';
     print_centered(text);
@@ -166,32 +176,49 @@ void admin_or_user()
     system("clear");
     char option;
 
-    print_centered("   _________________________________________________________________________________________________________\n");
-    print_centered("  / _______________________________________________________________________________________________________ \\ \n");
-    print_centered("  | |     _____________                                                                                   | |\n");
-    print_centered("  | |     |           |                              WELCOME                                              | |\n");
-    print_centered("  | |     |  Press e  |                              ^^^^^^^                                              | |\n");
-    print_centered("  | |     |  to exit  |                                TO                                                 | |\n");
-    print_centered("  | |     |___________|                                ^^                                                 | |\n");
-    print_centered("  | |                                               HERMEAZEY                                             | |\n");
-    print_centered("  | |                                               ^^^^^^^^^                                             | |\n");
-    print_centered("  | |                                                                                                     | |\n");
-    print_centered("  | |                                                                                                     | |\n");
-    print_centered("  | |            ____________                                                    ___________              | |\n");
-    print_centered("  | |            |          |                                                    |         |              | |\n");
-    print_centered("  | |            |   USER   |                                                    |  ADMIN  |              | |\n");
-    print_centered("  | |            |__________|                                                    |_________|              | |\n");
-    print_centered("  | |                                                                                                     | |\n");
-    print_centered("  | |             Type u and                                                      Type a and              | |\n");
-    print_centered("  | |             Press Enter                                                     Press Enter             | |\n");
-    print_centered("  | |_____________________________________________________________________________________________________| |\n");
-    print_centered("  \\_________________________________________________________________________________________________________/\n");
-    print_centered("||   ||\n");
-    print_centered("||   ||\n");
-    print_centered("_________\n");
-    print_centered("/__|__|___\\__\n");
-    print_centered("|--(o)---(o)--|\n");
-    print_centered("^^^^^^^^^^^^^^^\n");
+    printf("                                    %s   _______________________________________________________________________________________________________%s\n\n", GREEN, RESET);
+    printf("                                    %s  / _______________________________________________________________________________________________________\\ %s\n\n", GREEN, RESET);
+    printf("                                    %s  | |                                                                                                     | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |     _____________                                                                                   | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |     |           |%s", GREEN, RESET);
+    printf("%s                              WELCOME                                              %s", CYAN, RESET);
+    printf("%s| |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |     |%s", GREEN, RESET);
+    printf("%s  Press e  %s", RED, RESET);
+    printf("%s|                              ^^^^^^^                                              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |     |%s", GREEN, RESET);
+    printf("%s  to exit  %s", RED, RESET);
+    printf("%s|%s", GREEN, RESET);
+    printf("%s                                TO%s", CYAN, RESET);
+    printf("%s                                                 | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |     |___________|                                ^^                                                 | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |%s", GREEN, RESET);
+    printf("%s                                    SHANKS CARPOOLING PVT LTD.%s", CYAN, RESET);
+    printf("%s                                       | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |                                               ^^^^^^^^^                                             | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |            ____________                                                    ___________              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |            |          |                                                    |         |              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |            |%s", GREEN, RESET);
+    printf("%s   USER%s", RED, RESET);
+    printf("%s   |                                                    |%s", GREEN, RESET);
+    printf("%s  ADMIN%s", RED, RESET);
+    printf("%s  |              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |            |__________|                                                    |_________|              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |                                                                                                     | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |%s", GREEN, RESET);
+    printf("%s             Type u and                                                      Type a and%s", CYAN, RESET);
+    printf("%s              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |%s", GREEN, RESET);
+    printf("%s             Press Enter                                                     Press Enter             %s", CYAN, RESET);
+    printf("%s| |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |_____________________________________________________________________________________________________| |%s\n\n", GREEN, RESET);
+    printf("                                    %s  \\_________________________________________________________________________________________________________/%s\n\n", GREEN, RESET);
+    printf("                                                                                       %s||   ||%s\n", GREEN, RESET);
+    printf("                                                                                       %s||   ||%s\n", GREEN, RESET);
+    printf("                                                                                      %s_________%s\n", YELLOW, RESET);
+    printf("                                                                                    %s/__|___|___\\__%s\n", YELLOW, RESET);
+    printf("                                                                                    %s|--(o)---(o)---|%s\n", YELLOW, RESET);
+    printf("                                                                                    %s^^^^^^^^^^^^^^^^%s\n\n", YELLOW, RESET);
 
     option = getchar();
     getchar(); // Clear the newline character from the buffer
@@ -226,32 +253,51 @@ void main_screen()
     system("clear");
     char option;
 
-    print_centered("   _________________________________________________________________________________________________________\n");
-    print_centered("  / _______________________________________________________________________________________________________ \\ \n");
-    print_centered("  | |  _______________                                                                                    | |\n");
-    print_centered("  | |  |             |                               WELCOME                                              | |\n");
-    print_centered("  | |  |   PRESS b   |                               ^^^^^^^                                              | |\n");
-    print_centered("  | |  |  to go back |                                 TO                                                 | |\n");
-    print_centered("  | |  |_____________|                                 ^^                                                 | |\n");
-    print_centered("  | |                                               HERMEAZEY                                             | |\n");
-    print_centered("  | |                                               ^^^^^^^^^                                             | |\n");
-    print_centered("  | |                                                                                                     | |\n");
-    print_centered("  | |                 TO                                                             TO                   | |\n");
-    print_centered("  | |            ____________                                                    ___________              | |\n");
-    print_centered("  | |            |          |                                                    |         |              | |\n");
-    print_centered("  | |            | REGISTER |                                                    | SIGN-IN |              | |\n");
-    print_centered("  | |            |__________|                                                    |_________|              | |\n");
-    print_centered("  | |                                                                                                     | |\n");
-    print_centered("  | |             Type r and                                                      Type s and              | |\n");
-    print_centered("  | |             Press Enter                                                     Press Enter             | |\n");
-    print_centered("  | |_____________________________________________________________________________________________________| |\n");
-    print_centered("  \\_________________________________________________________________________________________________________/\n");
-    print_centered("||   ||\n");
-    print_centered("||   ||\n");
-    print_centered("_________\n");
-    print_centered("/__|__|___\\__\n");
-    print_centered("|--(o)---(o)--|\n");
-    print_centered("^^^^^^^^^^^^^^^\n");
+    printf("                                    %s   ________________________________________________________________________________________________________%s\n\n", GREEN, RESET);
+    printf("                                    %s  / _______________________________________________________________________________________________________\\ %s\n\n", GREEN, RESET);
+    printf("                                    %s  | |  ________________                                                                                   | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |  |              |%s", GREEN, RESET);
+    printf("%s                              WELCOME%s", CYAN, RESET);
+    printf("%s                                              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |  |%s", GREEN, RESET);
+    printf("%s   PRESS b %s", RED, RESET);
+    printf("%s   |                              ^^^^^^^                                              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |  |%s", GREEN, RESET);
+    printf("%s  to go back %s", RED, RESET);
+    printf("%s |                                %s", GREEN, RESET);
+    printf("%sTO%s", CYAN, RESET);
+    printf("%s                                                 | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |  |______________|                                ^^                                                 | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |%s", GREEN, RESET);
+    printf("%s                                     SHANKS CARPOOLING PVT LTD.                                      %s", CYAN, RESET);
+    printf("%s| |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |                                               ^^^^^^^^^                                             | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |%s", GREEN, RESET);
+    printf("%s                 TO                                                             TO%s", BLUE, RESET);
+    printf("%s                   | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |            ____________                                                    ___________              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |            |          |                                                    |         |              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |            |%s", GREEN, RESET);
+    printf("%s REGISTER%s", RED, RESET);
+    printf("%s |                                                    |%s", GREEN, RESET);
+    printf("%s SIGN-IN%s", RED, RESET);
+    printf("%s |              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |            |__________|                                                    |_________|              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |                                                                                                     | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |%s", GREEN, RESET);
+    printf("%s             Type r and                                                      Type s and%s", CYAN, RESET);
+    printf("%s              | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |%s", GREEN, RESET);
+    printf("%s             Press Enter                                                     Press Enter%s", CYAN, RESET);
+    printf("%s             | |%s\n\n", GREEN, RESET);
+    printf("                                    %s  | |_____________________________________________________________________________________________________| |%s\n\n", GREEN, RESET);
+    printf("                                    %s  \\_________________________________________________________________________________________________________/%s\n\n", GREEN, RESET);
+    printf("                                    %s                                                        ||   ||%s\n", GREEN, RESET);
+    printf("                                    %s                                                        ||   ||%s\n", GREEN, RESET);
+    printf("                                    %s                                                       ________%s\n", YELLOW, RESET);
+    printf("                                    %s                                                      /___|__|_\\___%s\n", YELLOW, RESET);
+    printf("                                    %s                                                      |--(o)---(o)--|%s\n", YELLOW, RESET);
+    printf("                                    %s                                                      ^^^^^^^^^^^^^^^%s\n\n", YELLOW, RESET);
 
     option = getchar();
     getchar(); // Clear the newline character from the buffer
@@ -319,7 +365,6 @@ void admin_login()
         admin_login();
     }
 }
-
 void user_register()
 {
     system("clear");
@@ -330,50 +375,65 @@ void user_register()
     print_centered("REGISTER A NEW USER\n");
     print_centered("\n");
     print_centered("NOTE:\n");
-    print_centered("1)While entering Username and Password please don't use spaces and commas\n");
-    print_centered("2)Username and Password should be between 6 to 100 characters\n");
+    print_centered("1) While entering Username and Password please don't use spaces and commas\n");
+    print_centered("2) Username and Password should be between 6 to 100 characters\n");
     print_centered("\n");
     print_centered("Please enter your desired username:\n");
-    scanf("%s", username);
-    getchar(); // Clear the newline character from the buffer
-    int r = 0;
-
+    fgets(username, sizeof(username), stdin);
+    username[strcspn(username, "\n")] = '\0';
     if (strcmp(username, "b") == 0)
     {
         main_screen();
         return;
     }
-
+    int valid = 1;
+    for (int i = 0; i < strlen(username); i++)
+    {
+        if (username[i] == ' ' || username[i] == ',')
+        {
+            valid = 0;
+            break;
+        }
+    }
+    if (!valid || strlen(username) < 6 || strlen(username) > 100)
+    {
+        print_centered("Invalid username. Please follow the guidelines.\n");
+        print_centered("Press Enter to retry\n");
+        getchar(); // Wait for Enter key
+        user_register();
+        return;
+    }
     print_centered("\n");
     print_centered("Please enter your desired password:\n");
-    scanf("%s", password);
-    getchar(); // Clear the newline character from the buffer
-
+    fgets(password, sizeof(password), stdin);
+    password[strcspn(password, "\n")] = '\0';
     print_centered("\n");
     print_centered("Please re-enter your password:\n");
-    scanf("%s", confirm_password);
-    getchar(); // Clear the newline character from the buffer
-
-    if (strcmp(password, confirm_password) == 0)
-    {
-        r = registration(username, password);
-    }
-    else
+    fgets(confirm_password, sizeof(confirm_password), stdin);
+    confirm_password[strcspn(confirm_password, "\n")] = '\0';
+    if (strcmp(password, confirm_password) != 0 || strlen(password) < 6 || strlen(password) > 100)
     {
         print_centered("********************************\n");
         print_centered("ERROR\n");
-        print_centered("PASSWORDS DO NOT MATCH\n");
+        if (strcmp(password, confirm_password) != 0)
+        {
+            print_centered("PASSWORDS DO NOT MATCH\n");
+        }
+        else
+        {
+            print_centered("Invalid password. Please follow the guidelines.\n");
+        }
         print_centered("********************************\n");
         print_centered("Press Enter to retry\n");
         getchar(); // Wait for Enter key
         user_register();
         return;
     }
-
+    int r = registration(username, password);
     print_centered("\n");
     if (r == 1)
     {
-        char text[100] = "New registration : ";
+        char text[100] = "New registration: ";
         strcat(text, username);
         pr_log(text);
         print_centered("You have successfully registered\n");
@@ -383,7 +443,6 @@ void user_register()
         print_centered("Press Enter to continue\n");
         getchar(); // Wait for Enter key
         main_screen();
-        return;
     }
     else
     {
@@ -394,13 +453,12 @@ void user_register()
         print_centered("Press Enter to retry\n");
         getchar(); // Wait for Enter key
         user_register();
-        return;
     }
 }
-
 void user_login()
 {
     system("clear");
+
     char username[100], password[100];
     int login = 0;
 
@@ -412,22 +470,35 @@ void user_login()
     print_centered("PLEASE ENTER YOUR USERNAME AND PASSWORD\n");
     print_centered("\n");
     print_centered("Username:\n");
-    scanf("%s", username);
-    getchar(); // Clear the newline character from the buffer
-
+    fgets(username, sizeof(username), stdin);
+    username[strcspn(username, "\n")] = '\0';
     if (strcmp(username, "b") == 0)
     {
         main_screen();
         return;
     }
-
+    int valid = 1;
+    for (int i = 0; i < strlen(username); i++)
+    {
+        if (username[i] == ' ')
+        {
+            valid = 0;
+            break;
+        }
+    }
+    if (!valid || strlen(username) < 6 || strlen(username) > 100)
+    {
+        print_centered("Wrong username\n");
+        print_centered("Press Enter to retry\n");
+        getchar(); // Wait for Enter key
+        user_login();
+        return;
+    }
     print_centered("\n");
     print_centered("Password:\n");
-    scanf("%s", password);
-    getchar(); // Clear the newline character from the buffer
-
+    fgets(password, sizeof(password), stdin);
+    password[strcspn(password, "\n")] = '\0';
     login = login_check(username, password);
-
     if (login == 1)
     {
         char text[100] = "Login attempt success : ";
@@ -438,8 +509,7 @@ void user_login()
         print_centered("/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\n");
         print_centered("Press Enter to continue\n");
         getchar(); // Wait for Enter key
-        user_page(username, password);
-        return;
+        user_page(username, password, 1);
     }
     else if (login == 0)
     {
@@ -452,7 +522,6 @@ void user_login()
         print_centered("Press Enter to retry\n");
         getchar(); // Wait for Enter key
         user_login();
-        return;
     }
     else if (login == 3)
     {
@@ -462,11 +531,11 @@ void user_login()
         print_centered("Press Enter to retry\n");
         getchar(); // Wait for Enter key
         user_login();
-        return;
     }
 }
-void user_page(char username[], char password[])
+void user_page(char username[], char password[], int a)
 {
+
     system("clear");
     print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
     print_centered("USER PAGE\n");
@@ -486,13 +555,21 @@ void user_page(char username[], char password[])
     print_centered("5. Logout\n");
     print_centered("\n");
     print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
-    int choice;
-    scanf("%d", &choice);
-    if (choice == 1)
+    if (a == 0)
+    {
+        print_centered("********************************\n");
+        print_centered("ERROR\n");
+        print_centered("PLEASE ENTER A VALID OPTION\n");
+        print_centered("********************************\n");
+        print_centered("Press Enter to retry\n");
+    }
+    char choice;
+    scanf("%c", &choice);
+    if (choice == '1')
     {
         view_profile(username, password);
     }
-    else if (choice == 2)
+    else if (choice == '2')
     {
         int uid = finduser(username);
         if (check_rides(uid))
@@ -504,15 +581,15 @@ void user_page(char username[], char password[])
             book_ride(username, password);
         }
     }
-    else if (choice == 3)
+    else if (choice == '3')
     {
         previous_bookings(username, password);
     }
-    else if (choice == 4)
+    else if (choice == '4')
     {
         view_map(username, password);
     }
-    else if (choice == 5)
+    else if (choice == '5')
     {
         system("clear");
         char text[100] = "User has logged out : ";
@@ -527,15 +604,21 @@ void user_page(char username[], char password[])
         getchar(); // Wait for Enter key
         main_screen();
     }
+    else if (choice == '\n')
+    {
+        user_page(username, password, 1);
+    }
     else
     {
+
         print_centered("********************************\n");
         print_centered("ERROR\n");
         print_centered("PLEASE ENTER A VALID OPTION\n");
         print_centered("********************************\n");
         print_centered("Press Enter to retry\n");
-        getchar(); // Wait for Enter key
-        user_page(username, password);
+        getchar();
+        // getchar(); // Wait for Enter key
+        user_page(username, password, 0);
     }
 }
 void view_profile(char username[], char password[])
@@ -558,7 +641,7 @@ void view_profile(char username[], char password[])
     char back;
     getchar();
     scanf("%c", &back);
-    getchar(); // Consume the newline character left in the input buffer
+    // getchar(); // Consume the newline character left in the input buffer
     if (back == 'd')
     {
         // confirm delete
@@ -579,20 +662,21 @@ void view_profile(char username[], char password[])
     }
     else if (back == 'b')
     {
-        user_page(username, password);
+        user_page(username, password, 1);
     }
     else
     {
+        // user should be shown an error if he enters anything except numbers  1 to 6
+
         print_centered("********************************\n");
         print_centered("ERROR\n");
         print_centered("PLEASE ENTER A VALID OPTION\n");
         print_centered("********************************\n");
         print_centered("Press Enter to retry\n");
-        getchar();                        // Wait for Enter key
-        view_profile(username, password); //
+        view_profile(username, password);
+        getchar(); // Wait for Enter key
     }
 }
-
 void book_ride(char username[], char password[])
 {
     system("clear");
@@ -602,75 +686,116 @@ void book_ride(char username[], char password[])
     print_centered("RIDE BOOKING\n");
     print_centered("\n");
     print_centered("Please enter your pickup location: \n");
-    foundexact = 0;
-    k = 0;
-    int xsa, xea, ysa, yea;
+
     char pickup[100];
-    char drop[100];
-    while (!foundexact)
+    struct places data[37] = {};
+    int xsa, xea, ysa, yea;
+
+    while (1)
     {
+        foundexact = 0;
+        k = 0;
+
         scanf("%s", pickup);
         if (pickup[0] == 'b' && strlen(pickup) == 1)
         {
-            user_page(username, password);
+            user_page(username, password, 1);
         }
         else
         {
-            struct places data[37] = {};
             func(pickup, data);
+
             if (!foundexact)
             {
-                print_centered("Matches Found \n");
-                print_centered("Please enter any of the following \n");
-                for (int i = 0; i < k; i++)
+                if (k == 0)
                 {
-                    printf("%s\n", data[i].name);
+                    print_centered("No similar locations found\n");
                 }
-                printf("\n\n");
+                else
+                {
+                    print_centered("Matches Found \n");
+                    print_centered("Please enter any of the following \n");
+                    for (int i = 0; i < k; i++)
+                    {
+                        printf("%s\n", data[i].name);
+                    }
+                    printf("\n\n");
+                }
             }
             else
             {
                 xsa = data[0].cord_x;
                 ysa = data[0].cord_y;
+                break;
             }
         }
     }
     print_centered("Please enter your drop location: \n");
+    char drop[100];
     foundexact = 0;
     k = 0;
-    while (!foundexact)
+    while (1)
     {
+        foundexact = 0;
+        k = 0;
+
         scanf("%s", drop);
         if (drop[0] == 'b' && strlen(drop) == 1)
         {
-            user_page(username, password);
+            user_page(username, password, 1);
         }
         else
         {
-            struct places data[37] = {};
             func(drop, data);
+
             if (!foundexact)
             {
-                print_centered("Matches Found \n");
-                print_centered("Please enter any of the following \n");
-                for (int i = 0; i < k; i++)
+                if (k == 0)
                 {
-                    printf("%s\n", data[i].name);
+                    print_centered("No similar locations found\n");
                 }
-                printf("\n\n");
+                else
+                {
+                    print_centered("Matches Found \n");
+                    print_centered("Please enter any of the following \n");
+                    for (int i = 0; i < k; i++)
+                    {
+                        printf("%s\n", data[i].name);
+                    }
+                    printf("\n\n");
+                }
             }
             else
             {
                 xea = data[0].cord_x;
                 yea = data[0].cord_y;
+                break;
             }
         }
     }
     // return status of booking
+
+    if (strcmp(drop, pickup) == 0)
+    {
+        // system("clear");
+        char text[100] = "User ";
+        strcat(text, username);
+        strcat(text, " Booking attempt failed ");
+        // pr_log(text);
+        print_centered("********************************\n");
+        // print_centered("ERROR\n");
+        print_centered("Pickup and drop locations cannot be the same\n");
+        print_centered("********************************\n");
+        print_centered("Press Enter to retry\n");
+        getchar();
+        getchar(); // Wait for Enter key
+        book_ride(username, password);
+    }
     int booking;
     int uid = finduser(username);
     struct Passenger p = {uid, xsa, xea, ysa, yea};
     booking = assign_passenger(p);
+
     if (booking == 1)
     {
         system("clear");
@@ -691,20 +816,21 @@ void book_ride(char username[], char password[])
         print_centered("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
         getchar();
         getchar(); // Wait for Enter key
-        user_page(username, password);
+        user_page(username, password, 1);
     }
     else if (booking == 0)
     {
-        system("clear");
+        // system("clear");
         char text[100] = "User ";
         strcat(text, username);
-        strcat(text, " booking attemt failed ");
-        pr_log(text);
+        strcat(text, " Booking attempt failed ");
+        // pr_log(text);
         print_centered("********************************\n");
-        print_centered("ERROR\n");
-        print_centered("BOOKING FAILED\n");
+        // print_centered("ERROR\n");
+        // print_centered("Pickup and drop locations cannot be the same\n");
         print_centered("********************************\n");
         print_centered("Press Enter to retry\n");
+        getchar();
         getchar(); // Wait for Enter key
         book_ride(username, password);
     }
@@ -724,7 +850,7 @@ void previous_bookings(char username[], char password[])
     scanf("%c", &back);
     if (back == 'b')
     {
-        user_page(username, password);
+        user_page(username, password, 1);
     }
     else
     {
@@ -748,7 +874,7 @@ void view_map(char username[], char password[])
     scanf("%c", &back);
     if (back == 'b')
     {
-        user_page(username, password);
+        user_page(username, password, 1);
     }
     else
     {
@@ -780,7 +906,7 @@ void admin_page()
     print_centered("\n");
     print_centered("5. View Total Revenue till now\n");
     print_centered("\n");
-    print_centered("6. View User Log\n");
+    print_centered("6. View Log\n");
     print_centered("\n");
     print_centered("7. Logout\n");
     print_centered("\n");
@@ -883,6 +1009,7 @@ void admin_page()
         print_centered("********************************\n");
         print_centered("Press Enter to retry\n");
         getchar();
+        getchar();
         admin_page();
     }
 }
@@ -935,8 +1062,8 @@ void ongoing_ride(int uid, char username[], char password[])
                 printf("Fare: %d\n", fare);
                 print_centered("Press Enter to go back to user page\n");
                 getchar();
-                getchar();
-                user_page(username, password);
+                // getchar();
+                user_page(username, password, 1);
             }
             else
             {
@@ -948,7 +1075,7 @@ void ongoing_ride(int uid, char username[], char password[])
         }
         if (x == 'b')
         {
-            user_page(username, password);
+            user_page(username, password, 1);
         }
     }
     else
@@ -959,7 +1086,7 @@ void ongoing_ride(int uid, char username[], char password[])
     char a = getchar();
     if (a == 'b')
     {
-        user_page(username, password);
+        user_page(username, password, 1);
     }
     else
     {
@@ -1009,6 +1136,47 @@ int main()
     fclose(file3);
     FILE *file4 = fopen("log.txt", "a");
     fclose(file4);
+    FILE *file5 = fopen("places.txt", "w");
+    fprintf(file5, "%s", "Kalyanpuram,10,0\n");
+    fprintf(file5, "%s", "Rudragarh,20,0\n");
+    fprintf(file5, "%s", "Khansaar,30,0\n");
+    fprintf(file5, "%s", "KirrinIsland,40,0\n");
+    fprintf(file5, "%s", "Arrakis,50,0\n");
+    fprintf(file5, "%s", "DragonStone,60,0\n");
+    fprintf(file5, "%s", "Shambala,70,0\n");
+    fprintf(file5, "%s", "UdayagiriHills,90,0\n");
+    fprintf(file5, "%s", "Padhaghattam,80,0\n");
+    fprintf(file5, "%s", "FortAgarwal,-10,0\n");
+    fprintf(file5, "%s", "Pandora,-20,0\n");
+    fprintf(file5, "%s", "Gotham,-30,0\n");
+    fprintf(file5, "%s", "ViceCity,-40,0\n");
+    fprintf(file5, "%s", "Valyria,-50,0\n");
+    fprintf(file5, "%s", "Dharmasthali,-60,0\n");
+    fprintf(file5, "%s", "Helheim,-70,0\n");
+    fprintf(file5, "%s", "RedSea,-80,0\n");
+    fprintf(file5, "%s", "MaalavaIslands,-90,0\n");
+    fprintf(file5, "%s", "KamatNilayam,0,10\n");
+    fprintf(file5, "%s", "ELDorado,0,20\n");
+    fprintf(file5, "%s", "Hogwarts,0,30\n");
+    fprintf(file5, "%s", "Hogsmeade,0,40\n");
+    fprintf(file5, "%s", "LosSantos,0,50\n");
+    fprintf(file5, "%s", "Essos,0,60\n");
+    fprintf(file5, "%s", "Wakanda,0,70\n");
+    fprintf(file5, "%s", "ChocolateFactory,0,80\n");
+    fprintf(file5, "%s", "Kunthala,0,90\n");
+    fprintf(file5, "%s", "SIIT,0,-10\n");
+    fprintf(file5, "%s", "Atlantis,0,-20\n");
+    fprintf(file5, "%s", "NewAsgard,0,-30\n");
+    fprintf(file5, "%s", "KingsLanding,0,-40\n");
+    fprintf(file5, "%s", "Agrabah,0,-50\n");
+    fprintf(file5, "%s", "Olympus,0,-60\n");
+    fprintf(file5, "%s", "Elbaf,0,-70\n");
+    fprintf(file5, "%s", "Dholakpur,0,-80\n");
+    fprintf(file5, "%s", "ShooraniForest,0,-90\n");
+    fprintf(file5, "%s", "HANKSSJunction,0,0\n");
+    fclose(file5);
+    FILE *file6 = fopen("fare.txt", "a");
+    fclose(file6);
     system("clear");
     admin_or_user();
 }

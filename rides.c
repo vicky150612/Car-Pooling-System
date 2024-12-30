@@ -1,4 +1,3 @@
-
 void write_ride_to_file(struct Ride ride)
 {
     FILE *file = fopen("rides.txt", "r");
@@ -292,6 +291,8 @@ void prev_rides(char *username)
     FILE *file2 = fopen("fare.txt", "r");
     struct Ride ride;
     char line[100];
+    int f = 0;
+    int ride_id_set = 0;
     int ride_id, route_no, passenger_count, status;
     while (fgets(line, sizeof(line), file) != NULL)
     {
@@ -302,6 +303,8 @@ void prev_rides(char *username)
         {
             if (passengers[i] == uid)
             {
+                f++;
+                ride_id_set = ride_id;
                 printf("Ride ID: %d, Route No: %d, Passenger Count: %d, Status: ", ride_id, route_no, passenger_count);
                 if (status == 0)
                 {
@@ -309,33 +312,33 @@ void prev_rides(char *username)
                 }
                 else
                 {
-                    printf("Not Completed ");
+                    printf("Not Completed \n");
+                }
+                int fare[5];
+                while (fgets(line, sizeof(line), file2) != NULL)
+                {
+                    int ride_id1, passengercount;
+                    int index, numchars;
+                    sscanf(line, "Ride ID: %d Passenger Count: %d Total Fare : %n", &ride_id1, &passengercount, &numchars);
+                    index = numchars;
+                    if (ride_id1 == ride_id_set)
+                    {
+                        for (int i = 0; i < passengercount + 1; i++)
+                        {
+                            sscanf(&line[index], "%d %n", &fare[i], &numchars);
+                            index += numchars;
+                        }
+                        printf("Fare: %d\n", fare[1]);
+                    }
                 }
                 break;
             }
         }
     }
-    int fare[5];
-    while (fgets(line, sizeof(line), file2) != NULL)
+    if (f == 0)
     {
-        int ride_id1, passengercount;
-        int index, numchars;
-        sscanf(line, "Ride ID: %d Passenger Count: %d Total Fare : %n", &ride_id1, &passengercount, &numchars);
-        index = numchars;
-        if (ride_id1 == ride_id)
-        {
-            for (int i = 0; i < passengercount + 1; i++)
-            {
-                sscanf(&line[index], "%d %n", &fare[i], &numchars);
-                index += numchars;
-            }
-        }
+        printf("No previous rides\n");
     }
-    // for (int i = 0; i < 5; i++)
-    // {
-    //     printf("%d ", fare[i]);
-    // }
-    printf("Fare: %d\n", fare[1]);
     fclose(file);
     fclose(file2);
 }

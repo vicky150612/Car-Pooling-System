@@ -49,12 +49,6 @@ void delete_place(char *name)
 void view_ride(struct User *user)
 {
     FILE *ptr = fopen("rides.txt", "r");
-    if (ptr == NULL)
-    {
-        printf("Error opening rides.txt\n");
-        return;
-    }
-
     int found = 0;
     char line[256];
 

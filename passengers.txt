@@ -1,1 +1,0 @@
-Ride ID: 1 Passenger_count: 2 Passengers: 1001 1002 Cords: 0 10 70 0 0 10 70 0 

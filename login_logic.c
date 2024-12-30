@@ -138,7 +138,7 @@ void view_user_data()
 {
     set_userdata();
     struct Node *current = head;
-    while (current->next != NULL)
+    while (current != NULL)
     {
         printf("UID: %d, Username: %s\n", current->data.uid, current->data.username);
         current = current->next;

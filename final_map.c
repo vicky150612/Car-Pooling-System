@@ -1,44 +1,79 @@
+
+#include <stdio.h>
+
+#define RESET "\x1b[0m"
+#define RED "\x1b[31m"
+#define GREEN "\x1b[32m"
+#define YELLOW "\x1b[33m"
+#define BLUE "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN "\x1b[36m"
+#define WHITE "\x1b[37m"
 void map()
 {
-	printf("                                                                               o Kunthala\n");
+	printf("\n \n \n");
+	printf("                                                                               o");
+	printf("%s Kunthala%s\n",YELLOW,RESET);
 	printf("                                                                               |\n");
-	printf("                                                             Chocolate Factory o\n");
+	printf("%s                                                             Chocolate Factory %s",YELLOW,RESET);
+	printf("o\n");
 	printf("                                                                               |\n");
-	printf("                                                                               o Wakanda\n");
+	printf("                                                                               o");
+	printf("%s Wakanda%s\n",YELLOW,RESET);
 	printf("                                                                               |\n");
-	printf("                                                                         Essos o\n");
+	printf("%s                                                                         Essos%s",YELLOW,RESET);
+	printf(" o\n");
 	printf("                                                                               |\n");
-	printf("                                                                               o Los Santos\n");
+	printf("                                                                               o");
+	printf("%s Los Santos%s\n",YELLOW,RESET);
 	printf("                                                                               |\n");
-	printf("                                                                     Hogsmeade o\n");
+	printf("%s                                                                     Hogsmeade %s",YELLOW,RESET);
+	printf("o\n");
 	printf("                                                                               |\n");
-	printf("                                                                               o Hogwarts\n");
+	printf("                                                                               o");
+	printf("%s Hogwarts%s\n",YELLOW,RESET);
 	printf("                                                                               |\n");
-	printf("                                                                     EL Dorado o\n");
+	printf("%s                                                                     EL Dorado %s",YELLOW,RESET);
+	printf("o\n");
 	printf("                                                                               |\n");
-	printf("                                                                               o Kamat Nilay \n");
-	printf("                                                                               |\n");
-	printf("                                                                               |\n");
-	printf("Maalava Islands   Helheim            Valyria        Gotham        Fort Agarwal |         Rudragarh     Kirrin Island     Dragon Stone     Paadgaghattam\n");
-	printf("       o-------o------o--------o---------o-------o-----o------o----------o------+-----o-------o------o--------o--------o-------o--------o--------o---------o\n");
-	printf("           Red Sea       Dharmasthali       Vice City     Pandora              | Kalyan Puram    Khansaar          Arrakis          Shambhala       Udayagiri Hills\n");
+	printf("                                                                               o");
+	printf("%s Kamat Nilay %s\n",YELLOW,RESET);
 	printf("                                                                               |\n");
 	printf("                                                                               |\n");
-	printf("                                                                          SIIT o\n");
+	printf("%sMaalava Islands   Helheim            Valyria        Gotham        Fort Agarwal %s",YELLOW,RESET);
+	printf("|");
+	printf("%s         Rudragarh     Kirrin Island     Dragon Stone     Paadgaghattam%s\n",YELLOW,RESET);
+	printf("       o-------o------o--------o---------o-------o-----o------o----------o-----+------o-------o------o--------o--------o-------o--------o--------o---------o\n");
+	printf("%s           Red Sea       Dharmasthali       Vice City     Pandora              %s",YELLOW,RESET);
+	printf("|");
+	printf("%s Kalyan Puram    Khansaar          Arrakis          Shambhala       Udayagiri Hills%s\n",YELLOW,RESET);
 	printf("                                                                               |\n");
-	printf("                                                                               o Atlantis\n");
 	printf("                                                                               |\n");
-	printf("                                                                    New Asgard o\n");
+	printf("%s                                                                          SIIT %s",YELLOW,RESET);
+	printf("o\n");
 	printf("                                                                               |\n");
-	printf("                                                                               o King's Landing\n");
+	printf("                                                                               o ");
+	printf("%sAtlantis%s\n",YELLOW,RESET);
 	printf("                                                                               |\n");
-	printf("                                                                       Agrabah o\n");
+	printf("%s                                                                    New Asgard %s",YELLOW,RESET);
+	printf("o\n");
 	printf("                                                                               |\n");
-	printf("                                                                               o Olympics\n");
+	printf("                                                                               o");
+	printf("%s King's Landing%s\n",YELLOW,RESET);
 	printf("                                                                               |\n");
-	printf("                                                                         Elbaf o\n");
+	printf("%s                                                                       Agrabah %s",YELLOW,RESET);
+	printf("o\n");
 	printf("                                                                               |\n");
-	printf("                                                                               o Dholakpur\n");
+	printf("                                                                               o");
+	printf("%s Olympics%s\n",YELLOW,RESET);
 	printf("                                                                               |\n");
-	printf("                                                               Shoorani Forest o\n");
+	printf("%s                                                                         Elbaf%s",YELLOW,RESET);
+	printf(" o\n");
+	printf("                                                                               |\n");
+	printf("                                                                               o");
+	printf("%s Dholakpur%s\n",YELLOW,RESET);
+	printf("                                                                               |\n");
+	printf("%s                                                               Shoorani Forest %s",YELLOW,RESET);
+	printf("o\n");
 }
+
