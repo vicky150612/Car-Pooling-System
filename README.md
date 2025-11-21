@@ -16,7 +16,7 @@ The Carpooling Manager is a system designed to optimize carpooling by assigning 
    ```
 3. Workflow Overview:
    - Register as a new user.
-   - Log in to your account.
+   - Log in to the account you just created.
    - Book a ride.
    - Wait for other users to book rides along the same route.
    - Enjoy the cost advantage of shared travel compared to traveling alone.
